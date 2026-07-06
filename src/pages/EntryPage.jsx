@@ -40,9 +40,8 @@ const EntryPage = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === 'applicantId' || name === 'phoneNumber') {
+    if (name === 'applicantId') {
       // Allow only numeric characters
-     
       const numericValue = value.replace(/[^0-9]/g, '');
       setForm((prev) => ({ ...prev, [name]: numericValue }));
     } else {
@@ -68,7 +67,6 @@ const EntryPage = () => {
     setSuccess('');
     
     if (!trimmedForm.applicantName || !trimmedForm.applicantId || !trimmedForm.categoryId || !trimmedForm.typeId) {
-      console.log("hello")
     addToast('Please complete all required fields before saving.', { error: true });
       return;
     }
@@ -86,7 +84,6 @@ const EntryPage = () => {
         phoneNumber: '',
       });
     } catch (err) {
-      console.log(err);
       addToast(err.response?.data?.message || 'Unable to save applicant.', {error: true });
     } finally {
       setLoading(false);
@@ -186,7 +183,6 @@ const EntryPage = () => {
               <input
                 name="phoneNumber"
                 type="text"
-                inputMode='numeric'
                 value={form.phoneNumber}
                 onChange={handleChange}
                 className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-600"

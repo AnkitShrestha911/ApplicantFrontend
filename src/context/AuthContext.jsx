@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const loadCurrentUser = async () => {
     try {
       const response = await apiClient.get('/auth/me', {withCredentials: true});
-      console.log('Current user:', response.data.data);
       setUser(response.data.data);
     } catch (error) {
       setUser(null);
@@ -45,7 +44,6 @@ export const AuthProvider = ({ children }) => {
       await apiClient.post('/auth/logout', {}, { withCredentials: true });
       setUser(null);
     } catch(err) {
-      console.log(err);
       setUser(null);
     }
   };

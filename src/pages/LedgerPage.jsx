@@ -64,11 +64,9 @@ const LedgerPage = () => {
 	const filteredApplicants = useMemo(() => {
 		if (!dateFrom && !dateTo) return applicants;
 
-
 		const from = dateFrom ? new Date(dateFrom + "T00:00:00") : null;
 		const to = dateTo ? new Date(dateTo + "T23:59:59") : null;
 
-		
 		setFilter("");
 		return applicants.filter((a) => {
 			const created = new Date(a.createdAt);
@@ -223,8 +221,10 @@ const LedgerPage = () => {
 									return;
 								}
 
-								if(dateTo < dateFrom) {
-									setPdfError("Invalid date range: 'To' date cannot be earlier than 'From' date.");
+								if (dateTo < dateFrom) {
+									setPdfError(
+										"Invalid date range: 'To' date cannot be earlier than 'From' date.",
+									);
 									return;
 								}
 
@@ -242,7 +242,7 @@ const LedgerPage = () => {
 								const margin = 30;
 								const tableWidth = pageWidth - margin * 2;
 								const snoWidth = 40;
-								const phoneWidth = 95;
+								const agentWidth = 95;
 								const appIdWidth = 95;
 								const categoryWidth = 80;
 								const typeWidth = 60;
@@ -250,7 +250,7 @@ const LedgerPage = () => {
 								const nameWidth =
 									tableWidth -
 									(snoWidth +
-										phoneWidth +
+										agentWidth +
 										appIdWidth +
 										categoryWidth +
 										typeWidth);
@@ -291,11 +291,10 @@ const LedgerPage = () => {
 								doc.setLineWidth(1);
 								doc.line(margin, 100, pageWidth - margin, 100);
 
-
 								const body = filteredApplicants.map((a, index) => [
 									index + 1,
 									a.applicantName || "",
-									a.phoneNumber || "",
+									a.referrer || "",
 									a.applicantId || "",
 									a.category?.name || "",
 									a.type || "",
@@ -309,9 +308,7 @@ const LedgerPage = () => {
 										right: margin,
 									},
 
-									head: [
-										["S.NO", "NAME", "PHONE NO", "APP ID", "CATEGORY", "TYPE"],
-									],
+									head: [["S.NO", "NAME", "AGENT", "APP ID", "CATEGORY", "TYPE"]],
 
 									body,
 
@@ -359,7 +356,7 @@ const LedgerPage = () => {
 										},
 
 										2: {
-											cellWidth: phoneWidth,
+											cellWidth: agentWidth,
 										},
 
 										3: {
@@ -379,9 +376,7 @@ const LedgerPage = () => {
 									pageBreak: "auto",
 								});
 
-								const fileName = `ledger-report_${fromText}_${toText}_${new Date()
-									.toISOString()
-									.slice(0, 10)}.pdf`;
+								const fileName = `ledger-report_From_${fromText}_to_${toText}_${new Date().toLocaleString().split(',').join("")}.pdf`;
 
 								doc.save(fileName);
 							}}
@@ -532,19 +527,19 @@ const LedgerPage = () => {
 									<span className="text-sm font-medium text-slate-700 dark:text-slate-200">
 										Referrer (Marfat)
 									</span>
-								<select
-									name="referrer"
-									value={editing.referrer || ''}
-									onChange={handleEditChange}
-									className="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-								>
-									<option value="">None</option>
-									{referrers.map((referrer) => (
-										<option key={referrer._id} value={referrer.name}>
-											{referrer.name}
-										</option>
-									))}
-								</select>
+									<select
+										name="referrer"
+										value={editing.referrer || ""}
+										onChange={handleEditChange}
+										className="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+									>
+										<option value="">None</option>
+										{referrers.map((referrer) => (
+											<option key={referrer._id} value={referrer.name}>
+												{referrer.name}
+											</option>
+										))}
+									</select>
 								</label>
 								<div className="grid gap-4 sm:grid-cols-2">
 									<label className="block">
