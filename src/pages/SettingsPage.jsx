@@ -11,9 +11,11 @@ const SettingsPage = () => {
   const [categoryName, setCategoryName] = useState('');
   const [typeName, setTypeName] = useState('');
   const [referrerName, setReferrerName] = useState('');
+  const [loading, setLoading] = useState(true);
   const { addToast } = useToast();
 
   const loadSettings = async () => {
+    setLoading(true);
     try {
       const [categoryRes, typeRes, referrerRes] = await Promise.all([getCategories(), getTypes(), getReferrers()]);
       setCategories(categoryRes.data.data);
@@ -21,6 +23,8 @@ const SettingsPage = () => {
       setReferrers(referrerRes.data.data);
     } catch (err) {
       addToast('Unable to load settings.', { error: true });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,18 +140,31 @@ const SettingsPage = () => {
             </button>
           </form>
           <div className="mt-4 space-y-3">
-            {categories.map((category) => (
-              <div key={category._id} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
-                <span className="text-sm text-slate-700 dark:text-slate-200">{category.name}</span>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteCategory(category._id)}
-                  className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-rose-700 transition hover:bg-rose-200"
-                >
-                  Delete
-                </button>
+            {loading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 animate-pulse dark:border-slate-700 dark:bg-slate-950">
+                  <span className="h-4 w-1/3 rounded-full bg-slate-200 dark:bg-slate-800"></span>
+                  <span className="h-8 w-24 rounded-full bg-slate-200 dark:bg-slate-800"></span>
+                </div>
+              ))
+            ) : categories.length ? (
+              categories.map((category) => (
+                <div key={category._id} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                  <span className="text-sm text-slate-700 dark:text-slate-200">{category.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteCategory(category._id)}
+                    className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-rose-700 transition hover:bg-rose-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
+                No categories available.
               </div>
-            ))}
+            )}
           </div>
         </section>
 
@@ -194,18 +211,31 @@ const SettingsPage = () => {
             </button>
           </form>
           <div className="mt-4 space-y-3">
-            {referrers.map((referrer) => (
-              <div key={referrer._id} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
-                <span className="text-sm text-slate-700 dark:text-slate-200">{referrer.name}</span>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteReferrer(referrer._id)}
-                  className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-rose-700 transition hover:bg-rose-200"
-                >
-                  Delete
-                </button>
+            {loading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 animate-pulse dark:border-slate-700 dark:bg-slate-950">
+                  <span className="h-4 w-1/3 rounded-full bg-slate-200 dark:bg-slate-800"></span>
+                  <span className="h-8 w-24 rounded-full bg-slate-200 dark:bg-slate-800"></span>
+                </div>
+              ))
+            ) : referrers.length ? (
+              referrers.map((referrer) => (
+                <div key={referrer._id} className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-950">
+                  <span className="text-sm text-slate-700 dark:text-slate-200">{referrer.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteReferrer(referrer._id)}
+                    className="rounded-2xl bg-rose-100 px-3 py-2 text-sm text-rose-700 transition hover:bg-rose-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
+                No referrers available.
               </div>
-            ))}
+            )}
           </div>
         </section>
       </div>
