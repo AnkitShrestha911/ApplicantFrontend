@@ -159,7 +159,7 @@ const LedgerPage = () => {
 				</p>
 			</div>
 
-			<div className="grid gap-6 rounded-3xl bg-white p-6 shadow-sm dark:bg-slate-900">
+			<div className="grid gap-6 rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-900">
 				<div className="flex flex-col gap-4">
 					<input
 						value={search}
